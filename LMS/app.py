@@ -1,15 +1,20 @@
 import streamlit as st
 import joblib
 import numpy as np
+import os
+
+# Automatically find the path to the model file
+current_dir = os.path.dirname(__file__)
+model_path = os.path.join(current_dir, "student_score_predictor.pkl")
 
 # Load the trained model
-model = joblib.load('student_score_predictor.pkl')
+model = joblib.load(model_path)
 
 st.set_page_config(page_title="Student Exam Score Predictor")
 st.title("🎓 Student Final Exam Score Predictor (G3)")
 st.write("Enter student details below:")
 
-# Input fields
+# Input fields (same as your original code)
 G1 = st.slider("G1 - First Period Grade", 0, 20, 10)
 G2 = st.slider("G2 - Second Period Grade", 0, 20, 10)
 failures = st.slider("Number of Past Class Failures", 0, 4, 0)
@@ -32,12 +37,10 @@ health = st.slider("Health Status (1-5)", 1, 5, 3)
 def encode(val):
     return 1 if val == "yes" else 0
 
-input_data = np.array([[
-    G1, G2, failures, studytime, absences,
-    encode(schoolsup), encode(famsup), encode(paid),
-    Medu, Fedu, encode(higher), encode(romantic),
-    freetime, health, encode(activities)
-]])
+input_data = np.array([[G1, G2, failures, studytime, absences,
+                        encode(schoolsup), encode(famsup), encode(paid),
+                        Medu, Fedu, encode(higher), encode(romantic),
+                        freetime, health, encode(activities)]])
 
 # Predict and display result
 if st.button("Predict Final Exam Score"):
